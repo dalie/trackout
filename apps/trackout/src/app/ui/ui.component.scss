@@ -1,0 +1,50 @@
+:host {
+  position: relative;
+  inset: 0;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas:
+    'top-left top-center top-right'
+    'middle-left middle-center middle-right'
+    'bottom-left bottom-center bottom-right';
+
+  pointer-events: none;
+
+  > .area {
+    display: flex;
+
+    > * {
+      pointer-events: auto;
+      height: min-content;
+    }
+  }
+  .top-left {
+    grid-area: top-left;
+  }
+  .top-center {
+    grid-area: top-center;
+  }
+  .top-right {
+    grid-area: top-right;
+  }
+  .middle-left {
+    grid-area: middle-left;
+  }
+  .middle-center {
+    grid-area: middle-center;
+  }
+  .middle-right {
+    grid-area: middle-right;
+  }
+  .bottom-left {
+    grid-area: bottom-left;
+  }
+  .bottom-center {
+    grid-area: bottom-center;
+  }
+  .bottom-right {
+    grid-area: bottom-right;
+  }
+}

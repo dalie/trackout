@@ -1,0 +1,11 @@
+:host {
+  position: fixed;
+  inset: 0;
+
+  display: grid;
+  grid-template-areas: 'main';
+
+  > * {
+    grid-area: main;
+  }
+}

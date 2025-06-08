@@ -91,7 +91,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "trackout:build",
-        "staticFilePath": "dist/apps/trackout/browser",
+        "staticFilePath": "dist/apps/trackout",
         "spa": true
       }
     },
