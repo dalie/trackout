@@ -6,14 +6,17 @@ import {
   Engine,
   FreeCamera,
   HemisphericLight,
+  ImportMeshAsync,
   Light,
   Mesh,
+  MeshBuilder,
   Scene,
   Space,
   StandardMaterial,
   Texture,
   Vector3,
 } from '@babylonjs/core';
+import '@babylonjs/loaders/glTF';
 import { WindowRefService } from '../services/window-ref.service';
 
 @Injectable({ providedIn: 'root' })
@@ -31,6 +34,19 @@ export class EngineService {
     private windowRef: WindowRefService
   ) {}
 
+  public loadTrack(): void {
+    const ground = MeshBuilder.CreateGround(
+      'ground',
+      { width: 1000, height: 1000 },
+      this.scene
+    );
+    // Load gltf model on the scene
+    ImportMeshAsync('assets/montreal.gltf', this.scene).then((result) => {
+      const trackMesh = result.meshes[0];
+      trackMesh.position = new Vector3(0, 0, 0);
+      trackMesh.scaling = new Vector3(1, 1, 1);
+    });
+  }
   public createScene(canvas: ElementRef<HTMLCanvasElement>): void {
     // The first step is to get the reference of the canvas element from our HTML document
     this.canvas = canvas.nativeElement;
@@ -45,12 +61,12 @@ export class EngineService {
     // create a FreeCamera, and set its position to (x:5, y:10, z:-20 )
     this.camera = new FreeCamera(
       'camera1',
-      new Vector3(5, 10, -20),
+      new Vector3(0, 50, -20),
       this.scene
     );
 
     // target the camera to scene origin
-    this.camera.setTarget(Vector3.Zero());
+    //this.camera.setTarget(Vector3.Zero());
 
     // attach the camera to the canvas
     this.camera.attachControl(this.canvas, false);
@@ -63,7 +79,11 @@ export class EngineService {
     );
 
     // create a built-in "sphere" shape; its constructor takes 4 params: name, subdivisions, radius, scene
-    this.sphere = Mesh.CreateSphere('sphere1', 16, 2, this.scene);
+    this.sphere = MeshBuilder.CreateSphere(
+      'sphere',
+      { diameter: 2, segments: 32 },
+      this.scene
+    );
 
     // create the material with its texture for the sphere and assign it to the sphere
     const spherMaterial = new StandardMaterial('sun_surface', this.scene);
@@ -72,7 +92,10 @@ export class EngineService {
 
     // move the sphere upward 1/2 of its height
     this.sphere.position.y = 1;
+    this.sphere.position.x = -115;
+    this.sphere.position.z = 200;
 
+    this.camera.setTarget(this.sphere.position);
     // simple rotation along the y axis
     this.scene.registerAfterRender(() => {
       this.sphere.rotate(new Vector3(0, 1, 0), -0.02, Space.LOCAL);
@@ -80,6 +103,8 @@ export class EngineService {
 
     // generates the world x-y-z axis for better understanding
     this.showWorldAxis(8);
+
+    this.loadTrack();
   }
 
   public animate(): void {
