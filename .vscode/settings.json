@@ -1,5 +1,11 @@
 {
-    "nxConsole.generateAiAgentRules": true,
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "nxConsole.generateAiAgentRules": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always"
+  },
+  "typescript.preferences.organizeImports": {
+    "enabled": true
+  }
 }

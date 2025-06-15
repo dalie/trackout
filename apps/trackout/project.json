@@ -8,27 +8,26 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/trackout",
         "index": "apps/trackout/src/index.html",
         "browser": "apps/trackout/src/main.ts",
-        "polyfills": [
-          "zone.js"
-        ],
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/trackout/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
             "input": "apps/trackout/public"
+          },
+          {
+            "glob": "HavokPhysics.wasm",
+            "input": "node_modules/@babylonjs/havok/lib/esm/",
+            "output": "assets/"
           }
         ],
-        "styles": [
-          "apps/trackout/src/styles.scss"
-        ],
+        "styles": ["apps/trackout/src/styles.scss"],
         "scripts": []
       },
       "configurations": {
@@ -79,9 +78,7 @@
     },
     "test": {
       "executor": "@nx/vite:test",
-      "outputs": [
-        "{options.reportsDirectory}"
-      ],
+      "outputs": ["{options.reportsDirectory}"],
       "options": {
         "reportsDirectory": "../../coverage/apps/trackout"
       }
@@ -98,9 +95,7 @@
     "deploy": {
       "executor": "nx-github-pages:deploy",
       "options": {},
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     }
   }
 }

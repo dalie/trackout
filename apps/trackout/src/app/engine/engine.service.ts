@@ -1,110 +1,51 @@
 import { ElementRef, Injectable, NgZone } from '@angular/core';
 import {
   Color3,
-  Color4,
   DynamicTexture,
   Engine,
-  FreeCamera,
-  HemisphericLight,
   ImportMeshAsync,
-  Light,
   Mesh,
   MeshBuilder,
+  PhysicsAggregate,
+  PhysicsShapeType,
   Scene,
-  Space,
   StandardMaterial,
-  Texture,
   Vector3,
 } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
+import { setupCar } from '../game-objects/car';
+import { setupCamera } from '../game-objects/follow-camera';
+import { setupGround } from '../game-objects/ground';
+import { setupScene } from '../game-objects/scene';
 import { WindowRefService } from '../services/window-ref.service';
 
 @Injectable({ providedIn: 'root' })
 export class EngineService {
   private canvas!: HTMLCanvasElement;
   private engine!: Engine;
-  private camera!: FreeCamera;
   private scene!: Scene;
-  private light!: Light;
-
-  private sphere!: Mesh;
 
   public constructor(
     private ngZone: NgZone,
     private windowRef: WindowRefService
   ) {}
 
-  public loadTrack(): void {
-    const ground = MeshBuilder.CreateGround(
-      'ground',
-      { width: 1000, height: 1000 },
-      this.scene
-    );
-    // Load gltf model on the scene
-    ImportMeshAsync('assets/montreal.gltf', this.scene).then((result) => {
-      const trackMesh = result.meshes[0];
-      trackMesh.position = new Vector3(0, 0, 0);
-      trackMesh.scaling = new Vector3(1, 1, 1);
-    });
-  }
-  public createScene(canvas: ElementRef<HTMLCanvasElement>): void {
-    // The first step is to get the reference of the canvas element from our HTML document
+  public async createScene(
+    canvas: ElementRef<HTMLCanvasElement>
+  ): Promise<void> {
     this.canvas = canvas.nativeElement;
-
-    // Then, load the Babylon 3D engine:
     this.engine = new Engine(this.canvas, true);
+    const { scene, shadowGenerator } = await setupScene(this.engine);
+    const ground = setupGround(this.scene);
+    const car = setupCar(scene, shadowGenerator);
+    const camera = setupCamera(scene, car);
+    this.scene = scene;
+    this.scene.activeCamera = camera;
 
-    // create a basic BJS Scene object
-    this.scene = new Scene(this.engine);
-    this.scene.clearColor = new Color4(0, 0, 0, 0);
-
-    // create a FreeCamera, and set its position to (x:5, y:10, z:-20 )
-    this.camera = new FreeCamera(
-      'camera1',
-      new Vector3(0, 50, -20),
-      this.scene
-    );
-
-    // target the camera to scene origin
-    //this.camera.setTarget(Vector3.Zero());
-
-    // attach the camera to the canvas
-    this.camera.attachControl(this.canvas, false);
-
-    // create a basic light, aiming 0,1,0 - meaning, to the sky
-    this.light = new HemisphericLight(
-      'light1',
-      new Vector3(0, 1, 0),
-      this.scene
-    );
-
-    // create a built-in "sphere" shape; its constructor takes 4 params: name, subdivisions, radius, scene
-    this.sphere = MeshBuilder.CreateSphere(
-      'sphere',
-      { diameter: 2, segments: 32 },
-      this.scene
-    );
-
-    // create the material with its texture for the sphere and assign it to the sphere
-    const spherMaterial = new StandardMaterial('sun_surface', this.scene);
-    spherMaterial.diffuseTexture = new Texture('assets/sun.jpg', this.scene);
-    this.sphere.material = spherMaterial;
-
-    // move the sphere upward 1/2 of its height
-    this.sphere.position.y = 1;
-    this.sphere.position.x = -115;
-    this.sphere.position.z = 200;
-
-    this.camera.setTarget(this.sphere.position);
-    // simple rotation along the y axis
-    this.scene.registerAfterRender(() => {
-      this.sphere.rotate(new Vector3(0, 1, 0), -0.02, Space.LOCAL);
-    });
-
-    // generates the world x-y-z axis for better understanding
     this.showWorldAxis(8);
+    this.showGrid(100, 10); // Add grid with labels every 10 units
 
-    this.loadTrack();
+    //this.loadTrack();
   }
 
   public animate(): void {
@@ -214,5 +155,109 @@ export class EngineService {
     axisZ.color = new Color3(0, 0, 1);
     const zChar = makeTextPlane('Z', 'blue', size / 10);
     zChar.position = new Vector3(0, 0.05 * size, 0.9 * size);
+  }
+
+  public showGrid(size: number, step: number): void {
+    // Draw grid lines
+    for (let i = -size; i <= size; i += step) {
+      // Vertical lines (X axis)
+      MeshBuilder.CreateLines(
+        `gridLineX_${i}`,
+        { points: [new Vector3(i, 0.01, -size), new Vector3(i, 0.01, size)] },
+        this.scene
+      );
+      // Horizontal lines (Z axis)
+      MeshBuilder.CreateLines(
+        `gridLineZ_${i}`,
+        { points: [new Vector3(-size, 0.01, i), new Vector3(size, 0.01, i)] },
+        this.scene
+      );
+      // Add coordinate labels every 5 steps
+      if (i % (step * 5) === 0) {
+        const labelX = new DynamicTexture(`labelX_${i}`, 64, this.scene, true);
+        labelX.drawText(
+          i.toString(),
+          5,
+          40,
+          'bold 24px Arial',
+          'white',
+          'transparent',
+          true
+        );
+        const planeX = MeshBuilder.CreatePlane(
+          `labelXPlane_${i}`,
+          { size: 2 },
+          this.scene
+        );
+        planeX.position = new Vector3(i, 0.05, -size - 2);
+        const matX = new StandardMaterial(`matX_${i}`, this.scene);
+        matX.diffuseTexture = labelX;
+        matX.emissiveColor = new Color3(1, 1, 1);
+        matX.backFaceCulling = false;
+        planeX.material = matX;
+
+        const labelZ = new DynamicTexture(`labelZ_${i}`, 64, this.scene, true);
+        labelZ.drawText(
+          i.toString(),
+          5,
+          40,
+          'bold 24px Arial',
+          'white',
+          'transparent',
+          true
+        );
+        const planeZ = MeshBuilder.CreatePlane(
+          `labelZPlane_${i}`,
+          { size: 2 },
+          this.scene
+        );
+        planeZ.position = new Vector3(-size - 2, 0.05, i);
+        const matZ = new StandardMaterial(`matZ_${i}`, this.scene);
+        matZ.diffuseTexture = labelZ;
+        matZ.emissiveColor = new Color3(1, 1, 1);
+        matZ.backFaceCulling = false;
+        planeZ.material = matZ;
+      }
+    }
+  }
+
+  public loadTrack(): void {
+    const ground = MeshBuilder.CreateGround(
+      'ground',
+      { width: 10000, height: 10000 },
+      this.scene
+    );
+    ground.receiveShadows = true;
+    ground.position.y = -0.01; // Slightly below to avoid z-fighting
+
+    new PhysicsAggregate(
+      ground,
+      PhysicsShapeType.BOX,
+      { mass: 0, restitution: 0.5 },
+      this.scene
+    );
+
+    ImportMeshAsync('assets/montreal.gltf', this.scene).then((result) => {
+      const trackMesh = result.meshes[0];
+      trackMesh.position = new Vector3(0, 1, 0);
+      trackMesh.scaling = new Vector3(1, 1, 1);
+      trackMesh.receiveShadows = true;
+      //trackMesh.rotation = new Vector3(0, 0, Math.PI);
+
+      new PhysicsAggregate(
+        trackMesh,
+        PhysicsShapeType.MESH,
+        { mass: 0, restitution: 0.5, friction: 1 },
+        this.scene
+      );
+
+      result.meshes.forEach((mesh) => {
+        mesh.receiveShadows = true;
+      });
+
+      if (trackMesh.material) {
+        (trackMesh.material as StandardMaterial).disableLighting = false;
+      }
+    });
   }
 }

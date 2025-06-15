@@ -20,8 +20,8 @@ export class EngineComponent implements AfterViewInit {
   @ViewChild('rendererCanvas', { static: true })
   public rendererCanvas!: ElementRef<HTMLCanvasElement>;
 
-  ngAfterViewInit(): void {
-    this.engineService.createScene(this.rendererCanvas);
+  async ngAfterViewInit() {
+    await this.engineService.createScene(this.rendererCanvas);
     this.engineService.animate();
   }
 }
