@@ -5,39 +5,82 @@ import {
   PhysicsShapeType,
   Scene,
   ShadowGenerator,
-  Space,
   StandardMaterial,
   Texture,
   Vector3,
 } from '@babylonjs/core';
 
 export function setupCar(scene: Scene, shadowGenerator: ShadowGenerator): Mesh {
-  const cube = MeshBuilder.CreateBox(
-    'cube',
-    { width: 2, height: 1, depth: 4 },
+  const carBody = MeshBuilder.CreateBox(
+    'carBody',
+    { width: 1, height: 1, depth: 2 },
     scene
   );
-  cube.receiveShadows = false;
-  shadowGenerator.addShadowCaster(cube);
+  carBody.receiveShadows = false;
+  shadowGenerator.addShadowCaster(carBody);
 
-  // create the material with its texture for the cube and assign it to the cube
-  const cubeMaterial = new StandardMaterial('car_surface', scene);
-  cubeMaterial.diffuseTexture = new Texture('assets/sun.jpg', scene);
-  cube.material = cubeMaterial;
+  // create the material with its texture for the car body and assign it
+  const carMaterial = new StandardMaterial('car_surface', scene);
+  carMaterial.diffuseTexture = new Texture('assets/sun.jpg', scene);
+  carBody.material = carMaterial;
 
-  cube.position.y = 10;
-  cube.position.x = 0;
-  cube.position.z = 0;
+  carBody.position.y = 2;
+  carBody.position.x = 0;
+  carBody.position.z = 0;
 
-  const aggregate = new PhysicsAggregate(
-    cube,
+  const phys = new PhysicsAggregate(
+    carBody,
     PhysicsShapeType.BOX,
-    { mass: 1000, restitution: 0.2 },
+    { mass: 100, restitution: 0.2 },
     scene
   );
 
   scene.registerAfterRender(() => {
-    cube.rotate(new Vector3(0, 1, 0), -0.02, Space.LOCAL);
+    //carBody.rotate(new Vector3(0, 1, 0), -0.02, Space.LOCAL);
   });
-  return cube;
+
+  scene.onKeyboardObservable.add((kbInfo) => {
+    phys.body.disablePreStep = true;
+    if (kbInfo.type === 1) {
+      const forward = carBody.getDirection(new Vector3(0, 0, -1));
+      const force = 10000;
+      // KeyDown
+      switch (kbInfo.event.key) {
+        case 'ArrowUp':
+        case 'w':
+          phys.body.applyForce(
+            forward.multiply(new Vector3(force, 0, force)),
+            carBody.position
+          );
+          console.log('ArrowUp pressed');
+          break;
+        case 'ArrowDown':
+        case 's':
+          phys.body.applyForce(
+            forward.multiply(new Vector3(-force, 0, -force)),
+            carBody.position
+          );
+          break;
+        case 'ArrowLeft':
+        case 'a':
+          phys.body.applyAngularImpulse(new Vector3(0, -10, 0));
+          break;
+        case 'ArrowRight':
+        case 'd':
+          phys.body.applyAngularImpulse(new Vector3(0, 10, 0));
+          console.log('ArrowRight pressed');
+          break;
+        case 'r':
+          // Reset car position and forces
+          phys.body.setLinearVelocity(Vector3.Zero());
+          phys.body.setAngularVelocity(Vector3.Zero());
+          phys.body.disablePreStep = false;
+          phys.body.transformNode.setAbsolutePosition(new Vector3(0, 2, 0));
+          phys.body.transformNode.setDirection(new Vector3(0, 0, 1));
+          break;
+      }
+    }
+  });
+
+  return carBody;
 }

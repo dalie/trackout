@@ -24,13 +24,20 @@ export async function setupScene(engine: AbstractEngine) {
     new HavokPlugin(false, havokInstance)
   );
 
-  const light = new DirectionalLight('dirLight', new Vector3(-1, -2, 1), scene);
-  light.position = new Vector3(-3132, 100, 541);
+  //const hemisphericLight = scene.createDefaultHemisphericLight();
+  const light = new DirectionalLight(
+    'dirLight',
+    new Vector3(0.5, -0.5, 0.5),
+    scene
+  );
+  light.position.y = 100;
+  //light.intensity = 1.0;
 
   // Create ShadowGenerator
   const shadowGenerator = new ShadowGenerator(1024, light);
   shadowGenerator.useBlurExponentialShadowMap = true;
   shadowGenerator.blurKernel = 32;
+  //shadowGenerator.setDarkness(0.3);
 
   return { scene, shadowGenerator };
 }
