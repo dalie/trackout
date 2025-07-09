@@ -5,12 +5,12 @@ import {
   inject,
   ViewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { EngineService } from './engine.service';
 
 @Component({
   selector: 'app-engine',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './engine.component.html',
   styleUrl: './engine.component.scss',
 })

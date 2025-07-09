@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-ui',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './ui.component.html',
   styleUrl: './ui.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
