@@ -33,10 +33,26 @@ export class DeckComponent implements AfterViewInit {
       zIndex: 1,
     },
     {
-      name: 'Character',
+      name: 'CharacterFace',
       icon: 'face_b',
       size: 6,
       zIndex: 2,
+    },
+    {
+      name: 'CharacterLeftHand',
+      icon: 'blue_hand_closed',
+      size: 6,
+      zIndex: 2,
+      offsetX: 0.00035,
+      offsetY: 0,
+    },
+    {
+      name: 'CharacterRighHand',
+      icon: 'blue_hand_closed',
+      size: 6,
+      zIndex: 2,
+      offsetX: -0.00035,
+      offsetY: 0,
     },
   ];
 
@@ -98,7 +114,6 @@ export class DeckComponent implements AfterViewInit {
       id: 'GeoJsonLayer',
       data: '/assets/map.json',
       pickable: true,
-
       getFillColor: [0, 100, 0, 200],
     });
 
@@ -111,24 +126,37 @@ export class DeckComponent implements AfterViewInit {
       sizeUnits: 'meters',
       getIcon: (d) => d.icon,
       getPosition: (d) => {
+        if (d.offsetX || d.offsetY) {
+          const angleRad = (this.mouseAngle() * Math.PI) / 180;
+          const offsetXRotated =
+            -(d.offsetX ?? 0) * Math.cos(angleRad) -
+            -(d.offsetY ?? 0) * Math.sin(angleRad);
+          const offsetYRotated =
+            -(d.offsetX ?? 0) * Math.sin(angleRad) +
+            -(d.offsetY ?? 0) * Math.cos(angleRad);
+          const lngOffset =
+            offsetXRotated * (1 / Math.cos((this.center()[1] * Math.PI) / 180));
+          const latOffset = offsetYRotated;
+          return [
+            this.center()[0] + lngOffset,
+            this.center()[1] + latOffset,
+            d.zIndex,
+          ];
+        }
         return [...this.center(), d.zIndex] as [number, number, number];
       },
       getSize: (d) => d.size,
+
       getAngle: () => this.mouseAngle(),
       updateTriggers: {
         getPosition: Math.random(),
         getAngle: this.mouseAngle(),
       },
     });
-    return [layer, characterLayer];
+    return [characterLayer, layer];
   }
 
   updateCenter() {
-    const centerPixel = [
-      (this.deckElement?.nativeElement.clientWidth || 0) / 2,
-      (this.deckElement?.nativeElement.clientHeight || 0) / 2,
-    ];
-
     const centerCoord = [...this.center()];
 
     if (this.keyPressed.size > 0) {
@@ -191,6 +219,7 @@ export class DeckComponent implements AfterViewInit {
       layers: [...characterLayers],
     });
   }
+
   animationLoop() {
     this.renderLayers();
     requestAnimationFrame(this.animationLoop.bind(this));
