@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { Deck } from '@deck.gl/core';
 import { GeoJsonLayer, IconLayer } from '@deck.gl/layers';
+import { lineString, nearestPointOnLine, point } from '@turf/turf';
 
 @Component({
   selector: 'app-deck',
@@ -38,43 +39,7 @@ export class DeckComponent implements AfterViewInit {
       zIndex: 2,
     },
   ];
-  private mapFeatures: GeoJSON.FeatureCollection = {
-    type: 'FeatureCollection',
-    features: [
-      {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          coordinates: [
-            [
-              [-74.30037, 45.47923],
-              [-74.30034, 45.47801],
-              [-74.29597, 45.47816],
-              [-74.29602, 45.47937],
-              [-74.30037, 45.47923],
-            ],
-          ],
-          type: 'Polygon',
-        },
-      },
-      {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          coordinates: [
-            [
-              [0, 0],
-              [0.001, 0],
-              [0.001, 0.001],
-              [0, 0.001],
-              [0, 0],
-            ],
-          ],
-          type: 'Polygon',
-        },
-      },
-    ],
-  };
+
   ngAfterViewInit(): void {
     if (this.deckElement) {
       this.deck = new Deck({
@@ -83,7 +48,7 @@ export class DeckComponent implements AfterViewInit {
         initialViewState: {
           longitude: 0,
           latitude: 0,
-          zoom: 10,
+          zoom: 16,
           pitch: 0,
           bearing: 0,
         },
@@ -131,10 +96,10 @@ export class DeckComponent implements AfterViewInit {
   getCharacterLayers() {
     const layer = new GeoJsonLayer({
       id: 'GeoJsonLayer',
-      data: this.mapFeatures,
+      data: '/assets/map.json',
       pickable: true,
 
-      getFillColor: [160, 160, 180, 200],
+      getFillColor: [0, 100, 0, 200],
     });
 
     const characterLayer = new IconLayer({
@@ -142,7 +107,7 @@ export class DeckComponent implements AfterViewInit {
       data: this.characterIcons,
       iconAtlas: 'assets/character_sprite.png',
       iconMapping: 'assets/character_sprite.json',
-      sizeScale: 1,
+      sizeScale: 3,
       sizeUnits: 'meters',
       getIcon: (d) => d.icon,
       getPosition: (d) => {
@@ -163,32 +128,49 @@ export class DeckComponent implements AfterViewInit {
       (this.deckElement?.nativeElement.clientWidth || 0) / 2,
       (this.deckElement?.nativeElement.clientHeight || 0) / 2,
     ];
-    console.log(centerPixel);
 
-    const centerCoord = this.center();
+    const centerCoord = [...this.center()];
+
     if (this.keyPressed.size > 0) {
-      const offset = 0.000025;
-      if (this.keyPressed.has('a')) {
+      const offset = 0.00005;
+      if (this.keyPressed.has('a') || this.keyPressed.has('ArrowLeft')) {
         centerCoord[0] -= offset;
       }
-      if (this.keyPressed.has('d')) {
+      if (this.keyPressed.has('d') || this.keyPressed.has('ArrowRight')) {
         centerCoord[0] += offset;
       }
-      if (this.keyPressed.has('s')) {
+      if (this.keyPressed.has('s') || this.keyPressed.has('ArrowDown')) {
         centerCoord[1] -= offset;
       }
-      if (this.keyPressed.has('w')) {
+      if (this.keyPressed.has('w') || this.keyPressed.has('ArrowUp')) {
         centerCoord[1] += offset;
+      }
+    }
+
+    if (
+      centerCoord[0] !== this.center()[0] ||
+      centerCoord[1] !== this.center()[1]
+    ) {
+      const newCenterPixel = this.deck?.getViewports()[0].project(centerCoord);
+      if (!newCenterPixel) {
+        return;
       }
 
       const hits = this.deck?.pickObject({
-        x: centerPixel[0],
-        y: centerPixel[1],
-        radius: 5,
+        x: newCenterPixel[0],
+        y: newCenterPixel[1],
+        radius: 1,
         layerIds: ['GeoJsonLayer'],
-        unproject3D: false,
       });
-      console.log(hits);
+
+      if (hits?.object) {
+        const p = point(centerCoord);
+        const l = lineString(hits.object.geometry.coordinates[0]);
+        const snapped = nearestPointOnLine(l, p);
+
+        centerCoord[0] = snapped.geometry.coordinates[0];
+        centerCoord[1] = snapped.geometry.coordinates[1];
+      }
       this.center.set(centerCoord);
     }
   }
@@ -202,7 +184,7 @@ export class DeckComponent implements AfterViewInit {
       viewState: {
         latitude: center[1],
         longitude: center[0],
-        zoom: 17,
+        zoom: 16,
         pitch: 0,
         bearing: 0,
       },
