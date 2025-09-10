@@ -1,0 +1,626 @@
+{
+  "blue_body_circle": {
+    "x": 480,
+    "y": 960,
+    "width": 160,
+    "height": 160
+  },
+  "blue_body_rhombus": {
+    "x": 320,
+    "y": 960,
+    "width": 160,
+    "height": 160
+  },
+  "blue_body_square": {
+    "x": 480,
+    "y": 320,
+    "width": 160,
+    "height": 160
+  },
+  "blue_body_squircle": {
+    "x": 480,
+    "y": 640,
+    "width": 160,
+    "height": 160
+  },
+  "blue_hand_closed": {
+    "x": 960,
+    "y": 218,
+    "width": 70,
+    "height": 68
+  },
+  "blue_hand_open": {
+    "x": 1016,
+    "y": 422,
+    "width": 68,
+    "height": 76
+  },
+  "blue_hand_peace": {
+    "x": 1098,
+    "y": 80,
+    "width": 56,
+    "height": 80
+  },
+  "blue_hand_point": {
+    "x": 990,
+    "y": 700,
+    "width": 68,
+    "height": 72
+  },
+  "blue_hand_rock": {
+    "x": 944,
+    "y": 556,
+    "width": 72,
+    "height": 76
+  },
+  "blue_hand_thumb": {
+    "x": 1030,
+    "y": 292,
+    "width": 64,
+    "height": 76
+  },
+  "face_a": {
+    "x": 218,
+    "y": 1094,
+    "width": 100,
+    "height": 58
+  },
+  "face_b": {
+    "x": 118,
+    "y": 1094,
+    "width": 100,
+    "height": 48
+  },
+  "face_c": {
+    "x": 0,
+    "y": 1094,
+    "width": 118,
+    "height": 60
+  },
+  "face_d": {
+    "x": 800,
+    "y": 1062,
+    "width": 106,
+    "height": 66
+  },
+  "face_e": {
+    "x": 800,
+    "y": 772,
+    "width": 110,
+    "height": 80
+  },
+  "face_f": {
+    "x": 800,
+    "y": 852,
+    "width": 110,
+    "height": 66
+  },
+  "face_g": {
+    "x": 800,
+    "y": 918,
+    "width": 110,
+    "height": 64
+  },
+  "face_h": {
+    "x": 800,
+    "y": 700,
+    "width": 110,
+    "height": 72
+  },
+  "face_i": {
+    "x": 192,
+    "y": 160,
+    "width": 118,
+    "height": 84
+  },
+  "face_j": {
+    "x": 832,
+    "y": 74,
+    "width": 100,
+    "height": 78
+  },
+  "face_k": {
+    "x": 800,
+    "y": 982,
+    "width": 110,
+    "height": 80
+  },
+  "face_l": {
+    "x": 832,
+    "y": 0,
+    "width": 106,
+    "height": 74
+  },
+  "facial_part_eye_closed_down": {
+    "x": 494,
+    "y": 1128,
+    "width": 46,
+    "height": 22
+  },
+  "facial_part_eye_closed_up": {
+    "x": 448,
+    "y": 1128,
+    "width": 46,
+    "height": 22
+  },
+  "facial_part_eye_half_bottom": {
+    "x": 580,
+    "y": 1134,
+    "width": 40,
+    "height": 20
+  },
+  "facial_part_eye_half_top": {
+    "x": 540,
+    "y": 1128,
+    "width": 40,
+    "height": 20
+  },
+  "facial_part_eye_half_top_wing": {
+    "x": 398,
+    "y": 1128,
+    "width": 50,
+    "height": 20
+  },
+  "facial_part_eye_open": {
+    "x": 960,
+    "y": 422,
+    "width": 40,
+    "height": 40
+  },
+  "facial_part_eyebrow_a": {
+    "x": 118,
+    "y": 1142,
+    "width": 40,
+    "height": 10
+  },
+  "facial_part_eyebrow_b": {
+    "x": 700,
+    "y": 1128,
+    "width": 40,
+    "height": 14
+  },
+  "facial_part_eyebrow_c": {
+    "x": 620,
+    "y": 1144,
+    "width": 30,
+    "height": 10
+  },
+  "facial_part_eyebrow_d": {
+    "x": 620,
+    "y": 1128,
+    "width": 40,
+    "height": 16
+  },
+  "facial_part_mouth_angry": {
+    "x": 318,
+    "y": 1128,
+    "width": 80,
+    "height": 20
+  },
+  "facial_part_mouth_happy": {
+    "x": 660,
+    "y": 1128,
+    "width": 40,
+    "height": 14
+  },
+  "facial_part_mouth_sad": {
+    "x": 580,
+    "y": 1120,
+    "width": 40,
+    "height": 14
+  },
+  "facial_part_mouth_smirk": {
+    "x": 288,
+    "y": 244,
+    "width": 28,
+    "height": 14
+  },
+  "green_body_circle": {
+    "x": 480,
+    "y": 800,
+    "width": 160,
+    "height": 160
+  },
+  "green_body_rhombus": {
+    "x": 480,
+    "y": 480,
+    "width": 160,
+    "height": 160
+  },
+  "green_body_square": {
+    "x": 480,
+    "y": 160,
+    "width": 160,
+    "height": 160
+  },
+  "green_body_squircle": {
+    "x": 320,
+    "y": 800,
+    "width": 160,
+    "height": 160
+  },
+  "green_hand_closed": {
+    "x": 960,
+    "y": 150,
+    "width": 70,
+    "height": 68
+  },
+  "green_hand_open": {
+    "x": 982,
+    "y": 924,
+    "width": 68,
+    "height": 76
+  },
+  "green_hand_peace": {
+    "x": 1084,
+    "y": 528,
+    "width": 56,
+    "height": 80
+  },
+  "green_hand_point": {
+    "x": 982,
+    "y": 852,
+    "width": 68,
+    "height": 72
+  },
+  "green_hand_rock": {
+    "x": 944,
+    "y": 480,
+    "width": 72,
+    "height": 76
+  },
+  "green_hand_thumb": {
+    "x": 1050,
+    "y": 924,
+    "width": 64,
+    "height": 76
+  },
+  "hand_yellow_closed": {
+    "x": 944,
+    "y": 632,
+    "width": 70,
+    "height": 68
+  },
+  "hand_yellow_open": {
+    "x": 986,
+    "y": 1000,
+    "width": 68,
+    "height": 76
+  },
+  "hand_yellow_peace": {
+    "x": 1084,
+    "y": 368,
+    "width": 56,
+    "height": 80
+  },
+  "hand_yellow_point": {
+    "x": 982,
+    "y": 780,
+    "width": 68,
+    "height": 72
+  },
+  "hand_yellow_rock": {
+    "x": 932,
+    "y": 74,
+    "width": 72,
+    "height": 76
+  },
+  "hand_yellow_thumb": {
+    "x": 1050,
+    "y": 772,
+    "width": 64,
+    "height": 76
+  },
+  "pink_body_circle": {
+    "x": 320,
+    "y": 320,
+    "width": 160,
+    "height": 160
+  },
+  "pink_body_rhombus": {
+    "x": 640,
+    "y": 800,
+    "width": 160,
+    "height": 160
+  },
+  "pink_body_square": {
+    "x": 640,
+    "y": 960,
+    "width": 160,
+    "height": 160
+  },
+  "pink_body_squircle": {
+    "x": 800,
+    "y": 160,
+    "width": 160,
+    "height": 160
+  },
+  "pink_hand_closed": {
+    "x": 960,
+    "y": 286,
+    "width": 70,
+    "height": 68
+  },
+  "pink_hand_open": {
+    "x": 1004,
+    "y": 68,
+    "width": 68,
+    "height": 76
+  },
+  "pink_hand_peace": {
+    "x": 1072,
+    "y": 0,
+    "width": 56,
+    "height": 80
+  },
+  "pink_hand_point": {
+    "x": 1030,
+    "y": 144,
+    "width": 68,
+    "height": 72
+  },
+  "pink_hand_rock": {
+    "x": 910,
+    "y": 780,
+    "width": 72,
+    "height": 76
+  },
+  "pink_hand_thumb": {
+    "x": 1054,
+    "y": 1000,
+    "width": 64,
+    "height": 76
+  },
+  "purple_body_circle": {
+    "x": 640,
+    "y": 320,
+    "width": 160,
+    "height": 160
+  },
+  "purple_body_rhombus": {
+    "x": 640,
+    "y": 480,
+    "width": 160,
+    "height": 160
+  },
+  "purple_body_square": {
+    "x": 800,
+    "y": 320,
+    "width": 160,
+    "height": 160
+  },
+  "purple_body_squircle": {
+    "x": 672,
+    "y": 0,
+    "width": 160,
+    "height": 160
+  },
+  "purple_hand_closed": {
+    "x": 960,
+    "y": 354,
+    "width": 70,
+    "height": 68
+  },
+  "purple_hand_open": {
+    "x": 1016,
+    "y": 570,
+    "width": 68,
+    "height": 76
+  },
+  "purple_hand_peace": {
+    "x": 1084,
+    "y": 448,
+    "width": 56,
+    "height": 80
+  },
+  "purple_hand_point": {
+    "x": 1016,
+    "y": 498,
+    "width": 68,
+    "height": 72
+  },
+  "purple_hand_rock": {
+    "x": 910,
+    "y": 856,
+    "width": 72,
+    "height": 76
+  },
+  "purple_hand_thumb": {
+    "x": 1054,
+    "y": 1076,
+    "width": 64,
+    "height": 76
+  },
+  "red_body_circle": {
+    "x": 640,
+    "y": 640,
+    "width": 160,
+    "height": 160
+  },
+  "red_body_rhombus": {
+    "x": 512,
+    "y": 0,
+    "width": 160,
+    "height": 160
+  },
+  "red_body_square": {
+    "x": 320,
+    "y": 640,
+    "width": 160,
+    "height": 160
+  },
+  "red_body_squircle": {
+    "x": 640,
+    "y": 160,
+    "width": 160,
+    "height": 160
+  },
+  "red_hand_closed": {
+    "x": 938,
+    "y": 0,
+    "width": 70,
+    "height": 68
+  },
+  "red_hand_open": {
+    "x": 1030,
+    "y": 216,
+    "width": 68,
+    "height": 76
+  },
+  "red_hand_peace": {
+    "x": 1058,
+    "y": 646,
+    "width": 56,
+    "height": 80
+  },
+  "red_hand_point": {
+    "x": 986,
+    "y": 1076,
+    "width": 68,
+    "height": 72
+  },
+  "red_hand_rock": {
+    "x": 910,
+    "y": 932,
+    "width": 72,
+    "height": 76
+  },
+  "red_hand_thumb": {
+    "x": 1050,
+    "y": 848,
+    "width": 64,
+    "height": 76
+  },
+  "shadow": {
+    "x": 192,
+    "y": 244,
+    "width": 96,
+    "height": 40
+  },
+  "tile": {
+    "x": 352,
+    "y": 0,
+    "width": 160,
+    "height": 160
+  },
+  "tile_background_grass": {
+    "x": 910,
+    "y": 1008,
+    "width": 64,
+    "height": 36
+  },
+  "tile_background_tree_large": {
+    "x": 0,
+    "y": 0,
+    "width": 192,
+    "height": 294
+  },
+  "tile_background_tree_small": {
+    "x": 800,
+    "y": 480,
+    "width": 144,
+    "height": 220
+  },
+  "tile_center": {
+    "x": 320,
+    "y": 480,
+    "width": 160,
+    "height": 160
+  },
+  "tile_cloud": {
+    "x": 910,
+    "y": 700,
+    "width": 80,
+    "height": 80
+  },
+  "tile_coin": {
+    "x": 906,
+    "y": 1062,
+    "width": 80,
+    "height": 80
+  },
+  "tile_exclamation": {
+    "x": 192,
+    "y": 0,
+    "width": 160,
+    "height": 160
+  },
+  "tile_grey": {
+    "x": 160,
+    "y": 934,
+    "width": 160,
+    "height": 160
+  },
+  "tile_half": {
+    "x": 160,
+    "y": 854,
+    "width": 160,
+    "height": 80
+  },
+  "tile_half_center": {
+    "x": 160,
+    "y": 774,
+    "width": 160,
+    "height": 80
+  },
+  "tile_half_left": {
+    "x": 160,
+    "y": 694,
+    "width": 160,
+    "height": 80
+  },
+  "tile_half_right": {
+    "x": 160,
+    "y": 614,
+    "width": 160,
+    "height": 80
+  },
+  "tile_left": {
+    "x": 320,
+    "y": 160,
+    "width": 160,
+    "height": 160
+  },
+  "tile_ramp_left": {
+    "x": 160,
+    "y": 294,
+    "width": 160,
+    "height": 160
+  },
+  "tile_ramp_right": {
+    "x": 0,
+    "y": 934,
+    "width": 160,
+    "height": 160
+  },
+  "tile_right": {
+    "x": 0,
+    "y": 774,
+    "width": 160,
+    "height": 160
+  },
+  "yellow_body_circle": {
+    "x": 160,
+    "y": 454,
+    "width": 160,
+    "height": 160
+  },
+  "yellow_body_rhombus": {
+    "x": 0,
+    "y": 454,
+    "width": 160,
+    "height": 160
+  },
+  "yellow_body_square": {
+    "x": 0,
+    "y": 614,
+    "width": 160,
+    "height": 160
+  },
+  "yellow_body_squircle": {
+    "x": 0,
+    "y": 294,
+    "width": 160,
+    "height": 160
+  }
+}
