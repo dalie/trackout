@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  signal,
   ViewChild,
 } from '@angular/core';
 import { Deck } from '@deck.gl/core';
@@ -22,37 +21,44 @@ export class DeckComponent implements AfterViewInit {
   @ViewChild('deck', { static: true })
   private readonly deckElement: ElementRef<HTMLCanvasElement> | undefined;
   private deck: Deck | undefined;
-  private center = signal([0, 0]);
-  private mouseAngle = signal(0);
+  private center = [0, 0];
+  private mouseAngle = 0;
   private keyPressed: Set<string> = new Set();
+  private actionDuration = 200;
+  private actionStart: number | null = null;
+  private actionAngle = 0;
+  private actionTargetAngle = -90;
   private characterIcons = [
     {
       name: 'Character',
-      icon: 'blue_body_circle',
-      size: 16,
+      icon: 'body',
+      size: 128,
       zIndex: 1,
     },
     {
       name: 'CharacterFace',
-      icon: 'face_b',
-      size: 6,
-      zIndex: 2,
+      icon: 'eyes',
+      zIndex: 4,
     },
     {
       name: 'CharacterLeftHand',
-      icon: 'blue_hand_closed',
-      size: 6,
-      zIndex: 2,
-      offsetX: 0.00035,
-      offsetY: 0,
+      icon: 'hand_left',
+      size: 128,
+      zIndex: 3,
     },
     {
       name: 'CharacterRighHand',
-      icon: 'blue_hand_closed',
-      size: 6,
+      icon: 'hand_right',
+      size: 128,
+      zIndex: 3,
+      isAction: true,
+    },
+    {
+      name: 'CharacterWeapon',
+      icon: 'pickaxe',
+      size: 128,
       zIndex: 2,
-      offsetX: -0.00035,
-      offsetY: 0,
+      isAction: true,
     },
   ];
 
@@ -68,9 +74,14 @@ export class DeckComponent implements AfterViewInit {
           pitch: 0,
           bearing: 0,
         },
+        onClick: (info) => {
+          if (this.actionStart === null) {
+            this.actionStart = Date.now();
+          }
+        },
         onHover: (info, event) => {
           const coords = info.coordinate as [number, number] | null;
-          const center = this.center();
+          const center = this.center;
 
           if (!coords || !center) return;
 
@@ -79,7 +90,7 @@ export class DeckComponent implements AfterViewInit {
             coords[1] - center[1],
             coords[0] - center[0]
           );
-          this.mouseAngle.set((angle * 180) / Math.PI - 270);
+          this.mouseAngle = (angle * 180) / Math.PI - 270;
         },
 
         controller: {
@@ -120,44 +131,29 @@ export class DeckComponent implements AfterViewInit {
     const characterLayer = new IconLayer({
       id: 'character-layer',
       data: this.characterIcons,
-      iconAtlas: 'assets/character_sprite.png',
-      iconMapping: 'assets/character_sprite.json',
       sizeScale: 3,
       sizeUnits: 'meters',
-      getIcon: (d) => d.icon,
+      getIcon: (d) => ({
+        url: `/assets/${d.icon}.png`,
+        width: 256,
+        height: 256,
+      }),
       getPosition: (d) => {
-        if (d.offsetX || d.offsetY) {
-          const angleRad = (this.mouseAngle() * Math.PI) / 180;
-          const offsetXRotated =
-            -(d.offsetX ?? 0) * Math.cos(angleRad) -
-            -(d.offsetY ?? 0) * Math.sin(angleRad);
-          const offsetYRotated =
-            -(d.offsetX ?? 0) * Math.sin(angleRad) +
-            -(d.offsetY ?? 0) * Math.cos(angleRad);
-          const lngOffset =
-            offsetXRotated * (1 / Math.cos((this.center()[1] * Math.PI) / 180));
-          const latOffset = offsetYRotated;
-          return [
-            this.center()[0] + lngOffset,
-            this.center()[1] + latOffset,
-            d.zIndex,
-          ];
-        }
-        return [...this.center(), d.zIndex] as [number, number, number];
+        return [...this.center, d.zIndex] as [number, number, number];
       },
       getSize: (d) => d.size,
 
-      getAngle: () => this.mouseAngle(),
+      getAngle: (d) => this.mouseAngle + (d.isAction ? this.actionAngle : 0),
       updateTriggers: {
         getPosition: Math.random(),
-        getAngle: this.mouseAngle(),
+        getAngle: this.mouseAngle + this.actionAngle,
       },
     });
     return [characterLayer, layer];
   }
 
   updateCenter() {
-    const centerCoord = [...this.center()];
+    const centerCoord = [...this.center];
 
     if (this.keyPressed.size > 0) {
       const offset = 0.00005;
@@ -176,8 +172,8 @@ export class DeckComponent implements AfterViewInit {
     }
 
     if (
-      centerCoord[0] !== this.center()[0] ||
-      centerCoord[1] !== this.center()[1]
+      centerCoord[0] !== this.center[0] ||
+      centerCoord[1] !== this.center[1]
     ) {
       const newCenterPixel = this.deck?.getViewports()[0].project(centerCoord);
       if (!newCenterPixel) {
@@ -199,13 +195,36 @@ export class DeckComponent implements AfterViewInit {
         centerCoord[0] = snapped.geometry.coordinates[0];
         centerCoord[1] = snapped.geometry.coordinates[1];
       }
-      this.center.set(centerCoord);
+      this.center = centerCoord;
     }
   }
+
+  updateAction() {
+    if (this.actionStart) {
+      const delta = Date.now() - this.actionStart;
+      const progress = delta / this.actionDuration;
+
+      if (progress > 1) {
+        this.actionAngle = 0;
+        this.actionStart = null;
+        return;
+      }
+
+      if (progress > 0.5) {
+        const half = this.actionTargetAngle / 2;
+        this.actionAngle = half - (this.actionTargetAngle * progress - half);
+        return;
+      }
+
+      this.actionAngle = this.actionTargetAngle * progress;
+    }
+  }
+
   renderLayers() {
     this.updateCenter();
+    this.updateAction();
 
-    const center = this.center();
+    const center = this.center;
     const characterLayers = this.getCharacterLayers();
 
     this.deck?.setProps({
